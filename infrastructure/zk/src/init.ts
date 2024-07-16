@@ -201,10 +201,13 @@ type InitSharedBridgeCmdActionAdaptorOptions = {
         validiumMode?: boolean;
     };
 };
-const initSharedBridgeCmdActionAdaptor = async ({parent: options}: InitSharedBridgeCmdActionAdaptorOptions): Promise<void> => {
+const initSharedBridgeCmdActionAdaptor = async ({
+    parent: options
+}: InitSharedBridgeCmdActionAdaptorOptions): Promise<void> => {
     await initSharedBridgeCmdAction({
         ...options,
-        deploymentMode: options.validiumMode !== undefined ? contract.DeploymentMode.Validium : contract.DeploymentMode.Rollup
+        deploymentMode:
+            options.validiumMode !== undefined ? contract.DeploymentMode.Validium : contract.DeploymentMode.Rollup
     });
 };
 
@@ -241,11 +244,7 @@ type InitHyperCmdActionAdaptorOptions = InitHyperCmdActionOptions & {
 export const initHyperCmdActionAdaptor = async ({
     skipSetupCompletely,
     bumpChainId,
-    parent: {
-        validiumMode,
-        baseTokenName,
-        runObservability,
-    }
+    parent: { validiumMode, baseTokenName, runObservability }
 }: InitHyperCmdActionAdaptorOptions): Promise<void> => {
     await initHyperCmdAction({
         skipSetupCompletely,
@@ -253,7 +252,7 @@ export const initHyperCmdActionAdaptor = async ({
         baseTokenName,
         runObservability,
         deploymentMode: validiumMode !== undefined ? contract.DeploymentMode.Validium : contract.DeploymentMode.Rollup
-    })
+    });
 };
 
 // ########################### Command Definitions ###########################
