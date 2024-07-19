@@ -99,6 +99,8 @@ export async function deployL2ThroughL1({
     await utils.spawn(
         `yarn l2-contracts deploy-shared-bridge-on-l2-through-l1 ${args.join(' ')} ${
             localLegacyBridgeTesting ? '--local-legacy-bridge-testing' : ''
+        } ${
+            !!process.env.SKIP_INITIALIZE_CHAIN_GOVERNANCE ? '--skip-initialize-chain-governance true' : ''
         } | tee deployL2.log`
     );
 
