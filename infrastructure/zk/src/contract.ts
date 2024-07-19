@@ -231,7 +231,7 @@ export async function registerHyperchain({
 
     if (!!process.env.SKIP_GOVERNOR_ACTIONS) {
         console.log('Chain registration skipped. Skipping env update');
-        return
+        return;
     }
     const l2EnvVars = ['CHAIN_ETH_ZKSYNC_NETWORK_ID', 'CONTRACTS_DIAMOND_PROXY_ADDR', 'CONTRACTS_BASE_TOKEN_ADDR'];
     console.log('Writing to', `etc/env/l2-inits/${process.env.ZKSYNC_ENV!}.init.env`);
