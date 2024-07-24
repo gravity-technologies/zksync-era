@@ -196,6 +196,21 @@ const initSharedBridgeCmdAction = async (options: InitSharedBridgeCmdActionOptio
     await initBridgehubStateTransition();
 };
 
+type InitSharedBridgeCmdActionAdaptorOptions = {
+    parent: InitSetupOptions & {
+        validiumMode?: boolean;
+    };
+};
+const initSharedBridgeCmdActionAdaptor = async ({
+    parent: options
+}: InitSharedBridgeCmdActionAdaptorOptions): Promise<void> => {
+    await initSharedBridgeCmdAction({
+        ...options,
+        deploymentMode:
+            options.validiumMode !== undefined ? contract.DeploymentMode.Validium : contract.DeploymentMode.Rollup
+    });
+};
+
 type InitHyperCmdActionOptions = {
     skipSetupCompletely: boolean;
     bumpChainId: boolean;
@@ -217,7 +232,27 @@ export const initHyperCmdAction = async ({
         await initSetup({ skipEnvSetup: false, skipSubmodulesCheckout: false, runObservability, deploymentMode });
     }
     await initDatabase();
-    await initHyperchain({ includePaymaster: true, baseTokenName, deploymentMode });
+    await initHyperchain({ includePaymaster: false, baseTokenName, deploymentMode });
+};
+
+type InitHyperCmdActionAdaptorOptions = InitHyperCmdActionOptions & {
+    parent: InitSetupOptions & {
+        validiumMode?: boolean;
+        baseTokenName?: string;
+    };
+};
+export const initHyperCmdActionAdaptor = async ({
+    skipSetupCompletely,
+    bumpChainId,
+    parent: { validiumMode, baseTokenName, runObservability }
+}: InitHyperCmdActionAdaptorOptions): Promise<void> => {
+    await initHyperCmdAction({
+        skipSetupCompletely,
+        bumpChainId,
+        baseTokenName,
+        runObservability,
+        deploymentMode: validiumMode !== undefined ? contract.DeploymentMode.Validium : contract.DeploymentMode.Rollup
+    });
 };
 
 // ########################### Command Definitions ###########################
@@ -246,7 +281,7 @@ initCommand
     .option('--skip-submodules-checkout')
     .option('--validium-mode', 'deploy contracts in Validium mode')
     .option('--run-observability', 'run observability suite')
-    .action(initSharedBridgeCmdAction);
+    .action(initSharedBridgeCmdActionAdaptor);
 
 initCommand
     .command('hyper')
@@ -256,4 +291,4 @@ initCommand
     .option('--base-token-name <base-token-name>', 'base token name')
     .option('--validium-mode', 'deploy contracts in Validium mode')
     .option('--run-observability', 'run observability suite')
-    .action(initHyperCmdAction);
+    .action(initHyperCmdActionAdaptor);
