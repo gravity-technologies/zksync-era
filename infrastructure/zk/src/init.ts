@@ -232,7 +232,7 @@ export const initHyperCmdAction = async ({
         await initSetup({ skipEnvSetup: false, skipSubmodulesCheckout: false, runObservability, deploymentMode });
     }
     await initDatabase();
-    await initHyperchain({ includePaymaster: true, baseTokenName, deploymentMode });
+    await initHyperchain({ includePaymaster: false, baseTokenName, deploymentMode });
 };
 
 type InitHyperCmdActionAdaptorOptions = InitHyperCmdActionOptions & {
