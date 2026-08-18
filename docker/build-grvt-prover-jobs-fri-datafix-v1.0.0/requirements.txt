@@ -1,0 +1,3 @@
+# psycopg 3 with the pre-built C extension: no libpq/compiler needed at image
+# build time, which also keeps cross-platform (buildx/QEMU) builds fast.
+psycopg[binary]==3.2.3
